@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-subproject": "node create-subproject.js"
+    "create-subproject": "node create-subproject.js",
+    "js-cli": "./cli.js"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,8 @@
   "devDependencies": {
     "inquirer": "^8.2.6",
     "ncp": "^2.0.0"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.5"
   }
 }

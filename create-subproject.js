@@ -48,14 +48,6 @@ inquirer
     function createReactProject(name) {
       execSync(`mkdir -p ${projectPath}`, { stdio: "inherit" });
       process.chdir(projectPath);
-      execSync("npm init -y", { stdio: "inherit" });
-
-      // Install React and related dependencies
-      execSync("npm install react react-dom", { stdio: "inherit" });
-      execSync(
-        "npm install --save-dev @babel/core @babel/preset-env @babel/preset-react babel-loader webpack webpack-cli webpack-dev-server html-webpack-plugin",
-        { stdio: "inherit" }
-      );
 
       // Copy template files
       ncp(templatePath, projectPath, function (err) {
@@ -66,9 +58,18 @@ inquirer
 
         // Add development script to package.json
         const packageJsonPath = path.join(projectPath, "package.json");
-        const packageJson = require(packageJsonPath);
+
+        // Read and modify package.json
+        if (fs.existsSync(packageJsonPath)) {
+          const packageJsonContent = fs.readFileSync(packageJsonPath, "utf8");
+          const packageJsonData = JSON.parse(packageJsonContent);
+          packageJsonData.name = projectName; // Set project name as package name
+          const modifiedPackageJson = JSON.stringify(packageJsonData, null, 2);
+          fs.writeFileSync(packageJsonPath, modifiedPackageJson, "utf8");
+        }
 
         // Modify scripts in package.json
+        const packageJson = require(packageJsonPath);
         packageJson.scripts = {
           ...packageJson.scripts,
           start: "webpack serve --mode development --open",
